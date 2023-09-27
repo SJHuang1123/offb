@@ -10,7 +10,7 @@ geometry_msgs::TwistStamped twist;
 float current_x;
 mavros_msgs::State state;
 bool shut = false;
-bool takeoff = true;
+bool foward = false;
 
 void pose_cb(const geometry_msgs::PoseStamped::ConstPtr& msg){
     current_x = msg->pose.position.x;
@@ -21,8 +21,8 @@ void state_cb(const mavros_msgs::State::ConstPtr& msg){
 }
 
 void mqtt_cb(const std_msgs::Int32::ConstPtr& msg){
-    if (msg->data == 3)shut = true;
-    else if (msg->data == 2)takeoff = true;
+    if(msg->data == 3) foward = true;
+    else if (msg->data == 4)shut = true;
     
 }
 
@@ -37,15 +37,19 @@ int main(int argc, char **argv)
             ("/pp", 10, mqtt_cb);
     ros::Subscriber state_sub = nh.subscribe<mavros_msgs::State>
             ("mavros/state", 10, state_cb);                       
-    ros::Publisher altitude_pub = nh.advertise<geometry_msgs::TwistStamped>
+    ros::Publisher vel_pub = nh.advertise<geometry_msgs::TwistStamped>
             ("/mavros/setpoint_velocity/cmd_vel", 10);
     ros::ServiceClient set_mode_client = nh.serviceClient<mavros_msgs::SetMode>
             ("mavros/set_mode");
-
+            
     ros::Rate loop_rate(20);
+    while(ros::ok() && foward == false){
+        ros::spinOnce();
+        loop_rate.sleep();
+    }
     
     for(int i = 0; i < 100; i++){
-        altitude_pub.publish(twist);
+        vel_pub.publish(twist);
         loop_rate.sleep();
     }
 
@@ -54,7 +58,7 @@ int main(int argc, char **argv)
     
     float goal = 3.0;
     ros::Time last_request = ros::Time::now();
-    while (ros::ok())
+    while (ros::ok() && shut == false)
     {   
         if (state.mode != "OFFBOARD" && ros::Time::now() - last_request > ros::Duration(5.0))
         {
@@ -64,18 +68,20 @@ int main(int argc, char **argv)
             }
             last_request = ros::Time::now();
         }
-        if (((current_x - goal) <= 0.2 || ((goal - current_x) <= 0.2)) && takeoff == true)
+        if (((current_x - goal) <= 0.2 || ((goal - current_x) <= 0.2)) && foward == true)
         {
             float error = goal - current_x;
             if (error > 2){
                 error = 2;
                 twist.twist.linear.x = error/2;
-                altitude_pub.publish(twist);
 
             }         
             if (error < 0.1){
-                altitude_pub.shutdown();
+                twist.twist.linear.x = 0;
+                twist.twist.linear.z = 0;
             }
+            vel_pub.publish(twist);
+
         }        
         
         ros::spinOnce();

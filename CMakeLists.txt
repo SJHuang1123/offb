@@ -150,10 +150,7 @@ add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catk
 target_link_libraries(${PROJECT_NAME}_node
    ${catkin_LIBRARIES}
 )
-add_executable(altitude src/altitude.cpp)
-target_link_libraries(altitude
-   ${catkin_LIBRARIES}
-)
+
 add_executable(foward src/foward.cpp)
 target_link_libraries(foward
    ${catkin_LIBRARIES}
@@ -163,10 +160,6 @@ target_link_libraries(position_init
    ${catkin_LIBRARIES}
 )
 
-add_executable(jimmy's_version src/jimmy's_version.cpp)
-target_link_libraries(jimmy's_version
-   ${catkin_LIBRARIES}
-)
 
 #############
 ## Install ##
