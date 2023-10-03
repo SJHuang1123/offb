@@ -159,7 +159,10 @@ add_executable(position_init src/position_init.cpp)
 target_link_libraries(position_init
    ${catkin_LIBRARIES}
 )
-
+add_executable(offb_node2 src/offb_node2.cpp)
+target_link_libraries(offb_node2
+   ${catkin_LIBRARIES}
+)
 
 #############
 ## Install ##

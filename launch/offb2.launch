@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<launch>
+    <include file="$(find mavros)/launch/apm.launch"/>
+    <include file="$(find mqtt_client)/launch/standalone.launch"/>
+    <node name="offb_node2" pkg="offb" type="offb_node" output="screen"/>
+    <node name="foward" pkg="offb" type="foward" output="screen"/>
+    <node name="position_init" pkg="offb" type="position_init" output="screen"/>
+        
+</launch>
