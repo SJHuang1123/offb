@@ -46,14 +46,14 @@ int main(int argc, char **argv)
         ROS_INFO("Wait for FCU");
     }
     ROS_INFO("FCU connected");
-    while (ros::ok() && takeoff == false) {
-        ros::spinOnce();
-        rate.sleep();
-        //ROS_INFO("Wait for FCU");
-    }
+    // while (ros::ok() && takeoff == false) {
+    //     ros::spinOnce();
+    //     rate.sleep();
+    //     //ROS_INFO("Wait for FCU");
+    // }
     ROS_INFO("takeoff requested");
     mavros_msgs::SetMode offb_set_mode;
-    offb_set_mode.request.custom_mode = "GUIDED";
+    offb_set_mode.request.custom_mode = "OFFBOARD";
 
     mavros_msgs::CommandBool arm_cmd;
     arm_cmd.request.value = true;

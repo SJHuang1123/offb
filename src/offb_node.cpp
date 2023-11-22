@@ -16,8 +16,8 @@
 
 mavros_msgs::State current_state;
 geometry_msgs::TwistStamped twist;
-bool takeoff_flag = false;
-bool arming_flag = false;
+bool takeoff_flag = true;
+bool arming_flag = true;
 bool shut = false;
 float current_x;
 void state_cb(const mavros_msgs::State::ConstPtr& msg){
@@ -33,7 +33,7 @@ void mqtt_cb(const std_msgs::Int32::ConstPtr& msg){
         arming_flag = true;
     else if (msg->data == 4)
     {
-        shut = true;
+        shut = false;
     }
     
 }

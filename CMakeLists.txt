@@ -163,6 +163,10 @@ add_executable(offb_node2 src/offb_node2.cpp)
 target_link_libraries(offb_node2
    ${catkin_LIBRARIES}
 )
+add_executable(offb_node3 src/offb_node3.cpp)
+target_link_libraries(offb_node3
+   ${catkin_LIBRARIES}
+)
 
 #############
 ## Install ##
